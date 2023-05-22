@@ -4,6 +4,8 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
+
+        System.setProperty("sun.java2d.opengl", "true"); // fixed the lag problem
         JFrame window = new JFrame();
 
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,6 +19,8 @@ public class Main {
 
         window.setLocationRelativeTo(null); // display at center of the screen
         window.setVisible(true);
+
+        gamePanel.startGameThread();
 
     }
 }

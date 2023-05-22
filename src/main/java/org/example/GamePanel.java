@@ -1,13 +1,15 @@
 package org.example;
 
+import entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
     final int originalTileSize = 16;
-    final int scale = 3; //scale the characters by 16 * 3
-    final int tileSize = originalTileSize * scale; //64x64 tile size
+    final int scale = 4; //scale the characters by 16 * 4
+   public final int tileSize = originalTileSize * scale; //64x64 tile size
 
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
@@ -15,10 +17,11 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenCol;
     final int screenHeight = tileSize * maxScreenRow;
 
-    int fps = 60;
+    final int fps = 60;
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameThread;
+    Player player = new Player(this, keyHandler);
 
     //
     int playerX = 100;
@@ -42,7 +45,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        delayTime();
+    }
 
+    public void delayTime() {
         double drawInterval = 1000000000 / fps;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -58,25 +64,18 @@ public class GamePanel extends JPanel implements Runnable {
                 update();
                 repaint();
                 delta--;
-            }
+            }/*delta represents how many frames have passed so far
+            by dividing (currentTime-lastTime) by draw interval we find how much many
+            frames have passed by in that loop so we add that to delta, lets say in the first loop 0.3 frames pass,
+            so delta becomes 0.3. Now on the next loop same thing happens until delta
+            eventually adds up to 1 or more than 1. When that happens it means that a frame has
+            passed and we now want to update the game so we repaint and call the update function*/
         }
     }
 
     public void update() {
 
-        if (keyHandler.upPressed == true) {
-            playerY -= playerSpeed;
-        }
-        if (keyHandler.downPressed == true) {
-            playerY += playerSpeed;
-        }
-        if (keyHandler.rightPressed == true) {
-            playerX += playerSpeed;
-        }
-        if (keyHandler.leftPressed == true) {
-            playerX -= playerSpeed;
-        }
-
+        player.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -86,9 +85,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.WHITE);
-
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        player.draw(g2);
 
         g2.dispose();
     }

@@ -13,6 +13,8 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyHandler;
 
+    int standCounter = 0;
+
     public Player(GamePanel gp, KeyHandler keyHandler) {
         this.gp = gp;
         this.keyHandler = keyHandler;
@@ -62,7 +64,7 @@ public class Player extends Entity {
             }
 
             spriteCounter++;
-            if (spriteCounter > 12) { //every 12 frames changes image
+            if (spriteCounter > 16 - speed) { //every 12 frames changes image
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 } else if (spriteNum == 2) {
@@ -70,6 +72,13 @@ public class Player extends Entity {
                 }
                 spriteCounter = 0;
             }
+        } else {
+            standCounter++;
+            if (standCounter == 16) {
+                spriteNum = 1;
+                standCounter=0;
+            }
+
         }
     }
 
